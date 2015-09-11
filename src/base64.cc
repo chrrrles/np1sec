@@ -207,7 +207,8 @@ char *otrl_base64_otr_encode(const unsigned char *buf, size_t buflen)
 	return NULL;
     }
     otrl_base64_encode(base64buf, buf, buflen);
-    base64buf[base64len + 1] = '\0';
+    base64buf[base64len] = 0;
+    //base64buf[base64len + 1] = '\0';
 
     return base64buf;
 }

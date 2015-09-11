@@ -79,6 +79,7 @@ TEST_F(CryptTest, test_encrypt_decrypt) {
   logger.silly("CryptTest/test_encrypt_decrypt");
   Cryptic cryptic;
   std::string test_text = "This is a string to be encrypted";
+  cryptic.init(); // HURRY
   std::string enc_text = cryptic.Encrypt(test_text.c_str());
   std::string dec_text = cryptic.Decrypt(enc_text);
   ASSERT_STREQ(test_text.c_str(), dec_text.c_str());
@@ -155,7 +156,7 @@ TEST_F(SecureStringTest, test_char_ptr_constructor_pass)
   str[2] = 0; str[3] = 106;
   SecureStringT sstr(str, static_cast<size_t>(4));
   ASSERT_TRUE(sstr.length() == 4);
-  delete str;
+  delete[] str;
   const uint8_t* data = sstr.unwrap();
   ASSERT_TRUE(data[0] == 100);
   ASSERT_TRUE(data[1] == 105);
@@ -179,7 +180,7 @@ TEST_F(SecureStringTest, test_char_ptr_constructor_fail)
   } catch (SecureStringException& e) {
     exception_encountered = true;
   }
-  delete str;
+  delete[] str;
   ASSERT_TRUE(exception_encountered);
 }
 

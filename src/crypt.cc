@@ -26,6 +26,7 @@
 #include <cstdio>
 #include <string>
 
+#include "src/common.h"
 #include "src/crypt.h"
 #include "src/exceptions.h"
 #include "src/logger.h"
@@ -166,7 +167,6 @@ AsymmetricKeyPair::AsymmetricKeyPair(gcry_sexp_t sexp)
   private_key = PrivateKey(gcry_sexp_find_token(sexp, "private-key", 0));
   scalar = Scalar(gcry_sexp_nth(gcry_sexp_find_token(sexp, "a", 0), 1));
 }
-
 gcry_error_t hash(const void *buffer, size_t buffer_len, HashBlock hb, bool secure) {
   gcry_error_t err = 0;
   gcry_md_hd_t digest = nullptr;
@@ -202,7 +202,8 @@ gcry_error_t hash(const std::string string_buffer, HashBlock hb)
 
 Cryptic::Cryptic() {
   assert(!gcry_md_test_algo(c_np1sec_hash));
-
+  //session_key = new np1secSymmetricKey;
+  memset(session_key, 0, c_hash_length);
 }
 
 AsymmetricKeyPair generate_key_pair() {
@@ -555,7 +556,7 @@ void Cryptic::triple_ed_dh(PublicKey peer_ephemeral_key,
   for(int i = 0; i < 3; i++)
     gcry_sexp_release(triple_dh_sexp[i]);
 
-  delete feed_to_hash_buffer;
+  delete[] feed_to_hash_buffer;
 
   if (failed)
     throw np1secCryptoException();
@@ -711,7 +712,7 @@ gcry_cipher_hd_t Cryptic::OpenCipher() {
     logger.error("Failed to create GCMb Block cipher", __FUNCTION__);
     goto err;
   }
-  
+
   err = gcry_cipher_setkey(hd, session_key, sizeof(np1secSymmetricKey));
   if ( err ) {
     logger.error("Failed to set the block cipher key", __FUNCTION__);
@@ -795,6 +796,8 @@ std::string Cryptic::Decrypt(std::string encrypted_text) {
 
 Cryptic::~Cryptic()
 {
+  // TODO - delete this when you aren't making session_key an np1secSymmetricKey
+  //delete/*[]*/ session_key;
 }
 
 } // namespace np1sec
