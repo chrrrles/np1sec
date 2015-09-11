@@ -128,7 +128,7 @@ static void _delete_sexp(gcry_sexp_t* sexp)
  * Constructor for the AsymmetricKey base class, wrapping a gcry_sexp_t.
  * @param {gcry_sexp_t} data - The s-expression to wrap
  */
-AsymmetricKey::AsymmetricKey(gcry_sexp_t data)
+Sexp::Sexp(gcry_sexp_t data)
 {
   // Create a shared pointer to the new s-exp to store and call
   // _delete_sexp to deallocate it.
@@ -150,7 +150,7 @@ static void _do_nothing(gcry_sexp_t* sexp)
  * Default constructor for AsymmetricKey that sets the data stored
  * to a nullptr to signal that it's not suited for use.
  */
-AsymmetricKey::AsymmetricKey()
+Sexp::Sexp()
 {
   data_ptr = std::shared_ptr<gcry_sexp_t>(nullptr, _do_nothing);
 }
@@ -422,7 +422,7 @@ gcry_sexp_t copy_crypto_resource(AsymmetricKey crypto_resource_wrapped)
 
 }
   
-gcry_sexp_t  AsymmetricKey::unwrap() {
+gcry_sexp_t Sexp::unwrap() {
   gcry_sexp_t copied_resource;
   gcry_error_t err = gcry_sexp_build(&copied_resource,
                                      NULL,

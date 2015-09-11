@@ -112,16 +112,27 @@ class InitVector : public SecureString
  * Wrap one of gcrypt's S-expression so that we can automatically release
  * its resources.
  */
-class AsymmetricKey
+class Sexp
 {
   public:
-  AsymmetricKey(gcry_sexp_t data);
-  AsymmetricKey();
+  Sexp(gcry_sexp_t data);
+  Sexp();
 
   gcry_sexp_t unwrap(); // { copy_crypto_resour *(data_ptr.get()); }
 
   private:
   std::shared_ptr<gcry_sexp_t> data_ptr;
+};
+
+/**
+ * Will potentially provide other functions that were previously handled
+ * in classes like Cryptic.
+ */
+class AsymmetricKey : public Sexp
+{
+  public:
+  AsymmetricKey(gcry_sexp_t key) : Sexp(key) {};
+  AsymmetricKey() : Sexp() {};
 };
 
 /**
