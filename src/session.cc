@@ -747,15 +747,14 @@ RoomAction np1secSession::init_a_session_with_plist(np1secMessage received_messa
   np1secPublicKey temp_future_pub_key = reconstruct_public_key_sexp(
       hash_to_string_buff(participants[received_message.sender_nick].future_raw_ephemeral_key));
   PublicKey wrapper(temp_future_pub_key);
-                                                                             
   if (!received_message.verify_message(wrapper))
     {
-      release_crypto_resource(temp_future_pub_key);
+      //release_crypto_resource(temp_future_pub_key);
       logger.warn("failed to verify signature of PARTICIPANT_INFO message.");
       throw np1secAuthenticationException();
     }
   
-  release_crypto_resource(temp_future_pub_key);
+  //release_crypto_resource(temp_future_pub_key);
 
   ParticipantMap live_participants = participants_list_to_map(received_message.get_session_view());
   
