@@ -105,7 +105,9 @@ TEST_F(SessionTest, test_init) {
   pair<np1secUserState*, ChatMocker*> user_server_state(&user_state, &mock_server);
 
   //client login and join
+  logger.silly("Signing in");
   mock_server.sign_in(username, chat_mocker_np1sec_plugin_receive_handler, static_cast<void*>(&user_server_state));
+  logger.silly("Joining");
   mock_server.join(mock_room_name, user_state.user_nick());
 
   //we need to call this after every action
@@ -159,20 +161,26 @@ TEST_F(SessionTest, test_second_join) {
 
   //everybody signs in
   //creator
+  logger.silly("Creator signing in");
   mock_server.sign_in(creator, chat_mocker_np1sec_plugin_receive_handler, static_cast<void*>(&creator_server_state));
   //joiner
+  logger.silly("Joiner signing in");
   mock_server.sign_in(joiner, chat_mocker_np1sec_plugin_receive_handler, static_cast<void*>(&joiner_server_state));
 
   //creator joins first
+  logger.silly("Creator joining");
   mock_server.join(mock_room_name, creator_state.user_nick());
 
   //receive your share and own confirmation
+  logger.silly("Receiving");
   mock_server.receive();
   
   //then joiner joins
+  logger.silly("Joiner joining");
   mock_server.join(mock_room_name, joiner_state.user_nick());
 
   //receive the join requests and start reations
+  logger.silly("Receiving");
   mock_server.receive();
   
   //tell np1sec to go through join

@@ -119,8 +119,10 @@ bool np1secUserState::init() {
  */
 bool np1secUserState::join_room(std::string room_name,
                                 std::vector<std::string> participants_in_the_room) {
+  logger.silly("Calling np1secUserState::join_room");
   //we can't join without id key
   if (!long_term_key_pair.is_initiated()) {
+    logger.silly("Insufficient credentials");
     logger.error(myself->nickname + "doesn't have sufficient credential to join room" + room_name + ". Long term id key has not been initiated for " + myself->nickname);
     throw np1secInsufficientCredentialException();
   }
@@ -132,8 +134,11 @@ bool np1secUserState::join_room(std::string room_name,
     //room creation triger joining
     logger.info("Did not find room to join. Creating new room.");
     try {
+      logger.silly("About to emplace new room in chatrooms");
       chatrooms.emplace(room_name, np1secRoom(room_name, this, participants_in_the_room));
+      logger.silly("Emplaced room in chatrooms");
     } catch(std::exception& e) {
+      logger.silly("An exception occurred!");
       logger.error(e.what(), __FUNCTION__, myself->nickname);
       logger.error("unable to join the room", __FUNCTION__, myself->nickname);
     }

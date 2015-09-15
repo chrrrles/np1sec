@@ -74,6 +74,7 @@ class MockRoom {
             void (*receive_handler)(std::string room_name,
                                     std::string message,
                                     void* user_data), void* user_data) {
+      cout << "MockRoom/join" << endl;
       mock_logger.silly("MockRoom/join");
       _participant_list[nick].nick = nick;
       _participant_list[nick].receive_handler = receive_handler;
@@ -198,8 +199,10 @@ class ChatMocker {
    */
   void join(std::string room, std::string nick) {
     mock_logger.silly("ChatMocker/join");
-    if (rooms.find(room) == rooms.end())
+    if (rooms.find(room) == rooms.end()) {
+      
       rooms.insert(std::pair<std::string, MockRoom>(room, MockRoom(room)));
+    }
     
     rooms[room].join(nick, signed_in_participant[nick].receive_handler, signed_in_participant[nick].aux_data);
     //we need to call the join_handler if it exists

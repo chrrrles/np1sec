@@ -37,7 +37,7 @@
 
 using namespace std;
 using namespace np1sec;
-
+;
 void chat_mocker_np1sec_plugin_join(std::string room_name,
                                         void* aux_data)
 {
@@ -133,8 +133,9 @@ void chat_mocker_np1sec_plugin_receive_handler(std::string room_name,
     // we don't care really about sender
     string pure_message = sender_and_message.substr(
                                     message_pos + strlen("@<o>@"));
-  //RoomActoin will tell you to 1)show message, 2)add participant 3) remove participant etc
- //not sure yet
+    //RoomActoin will tell you to 1)show message, 2)add participant 3) remove participant etc
+    //not sure yet
+    logger.silly("About to try to call receive_handler");
     user_server_state->first->receive_handler(room_name,
                                               sender,
                                               pure_message,
