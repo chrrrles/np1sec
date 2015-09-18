@@ -135,7 +135,9 @@ bool np1secUserState::join_room(std::string room_name,
     logger.info("Did not find room to join. Creating new room.");
     try {
       logger.silly("About to emplace new room in chatrooms");
-      chatrooms.emplace(room_name, np1secRoom(room_name, this, participants_in_the_room));
+      std::pair<std::string, np1secRoom*> toInsert(room_name, new np1secRoom(room_name, this, participants_in_the_room));
+      chatrooms.insert(toInsert);
+      //chatrooms.emplace(room_name, room_name, this, participants_in_the_room);
       logger.silly("Emplaced room in chatrooms");
     } catch(std::exception& e) {
       logger.silly("An exception occurred!");
@@ -151,7 +153,7 @@ bool np1secUserState::join_room(std::string room_name,
     //TODO:garbage collector for the room?
     logger.info("Trying to rejoin room");
     try { //try rejoining
-      chatrooms[room_name].try_rejoin();      
+      chatrooms[room_name]->try_rejoin();      
     }
     catch (np1secInvalidRoomException& e) {
       logger.warn("alreay in the room. need to leave the room before rejoining it.");
@@ -169,7 +171,7 @@ void np1secUserState::increment_room_size(std::string room_name)
   //if the room is not made, we make it.
   if (chatrooms.find(room_name) != chatrooms.end()) {
     //room creation triger joining
-    chatrooms[room_name].increment_size();
+    chatrooms[room_name]->increment_size();
   } 
 
 }
@@ -191,7 +193,7 @@ void np1secUserState::leave_room(std::string room_name) {
     
   }
 
-  chatrooms[room_name].leave();
+  chatrooms[room_name]->leave();
 
 }
 
@@ -218,7 +220,7 @@ void np1secUserState::shrink(std::string room_name, std::string leaving_user_id)
   //session will take care of consistency
   logger.info(leaving_user_id + " is leaving " + room_name, __FUNCTION__, myself->nickname);
   logger.info(room_name + " shrinking", __FUNCTION__, myself->nickname);
-  chatrooms[room_name].shrink(leaving_user_id);
+  chatrooms[room_name]->shrink(leaving_user_id);
   
 }
 
@@ -253,7 +255,7 @@ void np1secUserState::receive_handler(std::string room_name,
   //if there is no room, it was a mistake to give us the message
     logger.assert_or_die(chatrooms.find(room_name) != chatrooms.end(), "np1sec can not receive messages from room " + room_name + " to which has not been informed to join");
 
-    chatrooms[room_name].receive_handler(received);
+    chatrooms[room_name]->receive_handler(received);
   } catch (std::exception& e) { //any unhandled error till here, we just
     //ignore as bad message
     logger.error(e.what(), __FUNCTION__, myself->nickname);
@@ -274,7 +276,7 @@ void np1secUserState::send_handler(std::string room_name,
                                    std::string plain_message) {
   logger.assert_or_die(chatrooms.find(room_name) != chatrooms.end(), "np1sec can not send messages to room " + room_name + " to which has not been informed to join");
   try {
-   chatrooms[room_name].send_user_message(plain_message);
+   chatrooms[room_name]->send_user_message(plain_message);
   } 
   catch (std::exception& e) { //any unhandled error till here, we just
     //ignore as bad message

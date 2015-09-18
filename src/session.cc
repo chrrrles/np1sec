@@ -47,7 +47,7 @@ void cb_re_session(void *arg) {
   try {
     logger.assert_or_die(session->us->chatrooms.find(session->room_name) != session->us->chatrooms.end(), "np1sec can not add session to room " + session->room_name + " which apparenly doesn't exists", __FUNCTION__, session->myself.nickname);
 
-    session->us->chatrooms[session->room_name].insert_session(new_child_session);
+    session->us->chatrooms[session->room_name]->insert_session(new_child_session);
   } catch(std::exception& e) {
     logger.error("Failed to resession to ensure forward secrecy", __FUNCTION__, session->myself.nickname);
 
@@ -133,7 +133,7 @@ void cb_rejoin(void *arg) {
 
   logger.debug("joining session timed out, trying to rejoin", __FUNCTION__, session->myself.nickname);
   
-  session_room->second.try_rejoin();
+  session_room->second->try_rejoin();
 
   session->rejoin_timer = nullptr;
   

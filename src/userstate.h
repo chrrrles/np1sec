@@ -32,7 +32,7 @@
 namespace np1sec {
 
 class np1secUserState;
-typedef std::map<std::string, np1secRoom> RoomMap;
+typedef std::map<std::string, np1secRoom*> RoomMap;
 
 /**
  * Manages a user with long term identity for participating in a multiparty

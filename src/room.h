@@ -127,16 +127,9 @@ class np1secRoom {
    */
   np1secRoom(std::string room_name, np1secUserState* user_state, std::vector<std::string> participants_in_the_room);
 
-  /**
-   * bad constructor just for the sake of operator[] of chatrooms
-   *
-   */
-  np1secRoom() {
-      assert(0);
-  }
-
   //we need to deep copy the session_universe
-  np1secRoom(const np1secRoom& rhs)
+  np1secRoom(const np1secRoom& rhs) = delete;
+  /*
     : name(rhs.name), //room name given in creation by user_state
     user_state(rhs.user_state),
     myself(rhs.myself),
@@ -157,6 +150,8 @@ class np1secRoom {
           session_universe[new_copy->session_id.get_as_stringbuff()] = new_copy;
         }
     }
+   */
+
   /**
    * called by UserState, everytime the user trys to join a room
    * it just simply send a join message to the room.

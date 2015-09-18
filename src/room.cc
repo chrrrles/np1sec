@@ -675,7 +675,11 @@ void np1secRoom::insert_session(np1secSession* new_session) {
     }
   }
 
-  session_universe.emplace(std::pair<std::string, np1secSession*>(new_session->my_session_id().get_as_stringbuff(), new_session));
+  session_universe.insert(
+    std::pair<std::string, np1secSession*>(
+      new_session->my_session_id().get_as_stringbuff(),
+      new_session));
+  //session_universe.emplace(std::pair<std::string, np1secSession*>(new_session->my_session_id().get_as_stringbuff(), new_session));
   
 }
 
