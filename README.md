@@ -18,7 +18,7 @@ libtool --mode=execute gdb -i=mi xmpp_test
 The following instructions describe the steps required to build np1sec from scratch on a freshly installed system running debian 8.1 stable.  It is assumed that software such as `git` and `build-essential` are already present.
 
 ```
-# apt-get install git build-essential automake autoconf pkg-config libevent-dev libpurple-dev libglib2.0 glib-2.0-dev
+# apt-get install git build-essential automake autoconf pkg-config libevent-dev libpurple-dev libglib2.0 glib-2.0-dev transfig makeinfo
 
 
 ```
@@ -124,12 +124,6 @@ $ ./configure --enable-maintainer-mode && make
 $ cd ..
 ```
 
-To make sure that you link to the correct libgrypt:
-
-```
-$ mkdir -p m4 && ln -sf /usr/local/share/aclocal/libgcrypt.m4 m4/
-```
-
 ## haveged
  
 Haveged is used to generate entropy more quickly.  You may or may not want it (but you have to wait a long time to gather enough entropy if you do not install it).
@@ -145,6 +139,12 @@ Clone [np1sec](https://github.com/equalitie/np1sec).
 ```
 $ git clone https://github.com/equalitie/np1sec
 $ cd np1sec/
+```
+
+To make sure that you link to the correct libgrypt:
+
+```
+$ mkdir -p m4 && ln -sf /usr/local/share/aclocal/libgcrypt.m4 m4/
 $ ./autogen.sh
 $ ./configure
 $ make
